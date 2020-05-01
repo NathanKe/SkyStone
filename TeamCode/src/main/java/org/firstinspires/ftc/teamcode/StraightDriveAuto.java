@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="StraightDriveAuto")
+@Autonomous(name = "StraightDriveAuto")
 public class StraightDriveAuto extends LinearOpMode {
 
     private static final int forwardTicks = 4000;
@@ -17,7 +17,7 @@ public class StraightDriveAuto extends LinearOpMode {
         bot.setDriveTarget(forwardTicks);
         bot.setDrivePower(.1, .1, .1, .1);
 
-        while(opModeIsActive() && bot.driveMotorsBusy()){
+        while (opModeIsActive() && bot.driveMotorsBusy()) {
             bot.driveEncoderTelemetryReadout();
         }
 

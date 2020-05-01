@@ -102,11 +102,11 @@ class MecanumPlatform {
         motorBR.setPower(0.0);
     }
 
-    void stopAll(){
+    void stopAll() {
         stopDriveMotors();
     }
 
-    void resetDriveEncoders(){
+    void resetDriveEncoders() {
         motorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -118,7 +118,7 @@ class MecanumPlatform {
         motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    void setDriveTarget(int ticks){
+    void setDriveTarget(int ticks) {
         motorFL.setTargetPosition(ticks);
         motorFR.setTargetPosition(ticks);
         motorBL.setTargetPosition(ticks);
@@ -130,14 +130,14 @@ class MecanumPlatform {
         motorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    void setDrivePower(double powerFL, double powerFR, double powerBL, double powerBR){
+    void setDrivePower(double powerFL, double powerFR, double powerBL, double powerBR) {
         motorFL.setPower(powerFL);
         motorFR.setPower(powerFR);
         motorBL.setPower(powerBL);
         motorBR.setPower(powerBR);
     }
 
-    void driveEncoderTelemetryReadout(){
+    void driveEncoderTelemetryReadout() {
         telemetry.addData("FL", motorFL.getCurrentPosition());
         telemetry.addData("FR", motorFR.getCurrentPosition());
         telemetry.addData("BL", motorBL.getCurrentPosition());
@@ -145,7 +145,7 @@ class MecanumPlatform {
         telemetry.update();
     }
 
-    boolean driveMotorsBusy(){
+    boolean driveMotorsBusy() {
         return motorFL.isBusy() && motorFR.isBusy() && motorBL.isBusy() && motorBR.isBusy();
     }
 }
