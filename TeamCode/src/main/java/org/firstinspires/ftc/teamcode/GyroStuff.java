@@ -85,5 +85,7 @@ public class GyroStuff extends OpMode {
         telemetry.addData("YA", yAccel);
         telemetry.addData("ZA", zAccel);
         telemetry.update();
+
+        //asdf
     }
 }
