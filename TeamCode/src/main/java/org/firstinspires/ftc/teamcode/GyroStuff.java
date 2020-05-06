@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
@@ -14,7 +15,7 @@ public class GyroStuff extends OpMode {
     private BNO055IMU imu;
     private DcMotor axis;
 
-    private double pid_p = 0.1;
+    private double pid_p = 0.063;
     private double pid_i = 0.00;
     private double pid_d = 0.00;
 
@@ -38,6 +39,7 @@ public class GyroStuff extends OpMode {
             initialize_gyro(in_hwMap);
         }
         axis = in_hwMap.get(DcMotor.class, "axis");
+        axis.setDirection(DcMotorSimple.Direction.REVERSE);
         axis.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         errorPrev = 0;
@@ -65,11 +67,12 @@ public class GyroStuff extends OpMode {
             error = 10 * Math.signum(yAccel);
         } else {
             error = yAccel;
+            loopCount++;
         }
 
-        loopCount++;
+        //loopCount++;
         errorSum += error;
-        errorDif = error - errorPrev;
+        errorDif = Math.abs(error) - Math.abs(errorPrev);
         errorPrev = error;
 
         calcPower = pid_p * error + pid_i * errorSum / loopCount + pid_d + errorDif;
@@ -84,8 +87,8 @@ public class GyroStuff extends OpMode {
         telemetry.addData("XA", xAccel);
         telemetry.addData("YA", yAccel);
         telemetry.addData("ZA", zAccel);
+        telemetry.addData("Total", Math.sqrt(xAccel*xAccel + yAccel*yAccel + zAccel*zAccel));
         telemetry.update();
 
-        //asdf
     }
 }
