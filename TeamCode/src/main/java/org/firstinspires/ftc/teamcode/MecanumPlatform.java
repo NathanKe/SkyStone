@@ -17,7 +17,7 @@ class MecanumPlatform {
 
     private Telemetry telemetry;
 
-    private DcMotor motorFL;
+    public DcMotor motorFL;
     private DcMotor motorFR;
     private DcMotor motorBL;
     private DcMotor motorBR;
@@ -49,6 +49,10 @@ class MecanumPlatform {
         stopAll();
     }
 
+    public double getYaw(AngleUnit degreeOrRadian){
+        return -1 * imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, degreeOrRadian).thirdAngle;
+    }
+
     void baseDriveTrain(double left_x, double left_y, double right_x, double scale) {
 
         double raw_fl = left_y + left_x + right_x;
@@ -63,10 +67,7 @@ class MecanumPlatform {
         double out_bl = raw_bl / (max * scale);
         double out_br = raw_br / (max * scale);
 
-        motorFL.setPower(out_fl);
-        motorFR.setPower(out_fr);
-        motorBL.setPower(out_bl);
-        motorBR.setPower(out_br);
+        setDrivePower(out_fl, out_fr, out_bl, out_br);
 
         String out_fl_st = twoDecimalPlaces.format(out_fl);
         String out_fr_st = twoDecimalPlaces.format(out_fr);
@@ -81,7 +82,7 @@ class MecanumPlatform {
     }
 
     void fieldDriveTrain(double left_x, double left_y, double right_x, double scale) {
-        double heading = -1 * imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS).thirdAngle;
+        double heading = getYaw(AngleUnit.RADIANS);
 
         double adj_left_x = left_x * Math.cos(heading) - left_y * Math.sin(heading);
         double adj_left_y = left_x * Math.sin(heading) + left_y * Math.cos(heading);
@@ -131,10 +132,22 @@ class MecanumPlatform {
     }
 
     void setDrivePower(double powerFL, double powerFR, double powerBL, double powerBR) {
-        motorFL.setPower(powerFL);
-        motorFR.setPower(powerFR);
-        motorBL.setPower(powerBL);
-        motorBR.setPower(powerBR);
+        double max = Math.max(Math.max(Math.abs(powerFL), Math.abs(powerFR)), Math.max(Math.abs(powerBL), Math.abs(powerBR)));
+
+        // Too small, cut to zero
+        if(max <= 0.03){
+            motorFL.setPower(0.0);
+            motorFR.setPower(0.0);
+            motorBL.setPower(0.0);
+            motorBR.setPower(0.0);
+        }
+        // Normal power, send it!
+        else{
+            motorFL.setPower(powerFL);
+            motorFR.setPower(powerFR);
+            motorBL.setPower(powerBL);
+            motorBR.setPower(powerBR);
+        }
     }
 
     void driveEncoderTelemetryReadout() {
