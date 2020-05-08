@@ -17,7 +17,7 @@ class MecanumPlatform {
 
     private Telemetry telemetry;
 
-    public DcMotor motorFL;
+    private DcMotor motorFL;
     private DcMotor motorFR;
     private DcMotor motorBL;
     private DcMotor motorBR;
@@ -68,17 +68,6 @@ class MecanumPlatform {
         double out_br = raw_br / (max * scale);
 
         setDrivePower(out_fl, out_fr, out_bl, out_br);
-
-        String out_fl_st = twoDecimalPlaces.format(out_fl);
-        String out_fr_st = twoDecimalPlaces.format(out_fr);
-        String out_bl_st = twoDecimalPlaces.format(out_bl);
-        String out_br_st = twoDecimalPlaces.format(out_br);
-        String motor_str = out_fl_st + ", " + out_fr_st + ", " + out_bl_st + ", " + out_br_st;
-
-
-        telemetry.addData("Motors: ", motor_str);
-        telemetry.update();
-
     }
 
     void fieldDriveTrain(double left_x, double left_y, double right_x, double scale) {
@@ -131,23 +120,40 @@ class MecanumPlatform {
         motorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    void setDrivePower(double powerFL, double powerFR, double powerBL, double powerBR) {
-        double max = Math.max(Math.max(Math.abs(powerFL), Math.abs(powerFR)), Math.max(Math.abs(powerBL), Math.abs(powerBR)));
+    double profile_motion(double current, double desired){
+        double power_delta_max = 0.01;
 
-        // Too small, cut to zero
-        if(max <= 0.03){
-            motorFL.setPower(0.0);
-            motorFR.setPower(0.0);
-            motorBL.setPower(0.0);
-            motorBR.setPower(0.0);
+        if(Math.abs(Math.abs(current) - Math.abs(desired)) >= power_delta_max){
+            desired = current + Math.signum(desired - current) * power_delta_max;
         }
-        // Normal power, send it!
-        else{
-            motorFL.setPower(powerFL);
-            motorFR.setPower(powerFR);
-            motorBL.setPower(powerBL);
-            motorBR.setPower(powerBR);
-        }
+
+        return desired;
+    }
+
+    void setDrivePower(double powerFL, double powerFR, double powerBL, double powerBR) {
+        double prevPowerFL = motorFL.getPower();
+        double prevPowerFR = motorFR.getPower();
+        double prevPowerBL = motorBL.getPower();
+        double prevPowerBR = motorBR.getPower();
+
+        powerFL = profile_motion(prevPowerFL, powerFL);
+        powerFR = profile_motion(prevPowerFR, powerFR);
+        powerBL = profile_motion(prevPowerBL, powerBL);
+        powerBR = profile_motion(prevPowerBR, powerBR);
+
+        String out_fl_st = twoDecimalPlaces.format(powerFL);
+        String out_fr_st = twoDecimalPlaces.format(powerFR);
+        String out_bl_st = twoDecimalPlaces.format(powerBL);
+        String out_br_st = twoDecimalPlaces.format(powerBR);
+        String motor_str = out_fl_st + ", " + out_fr_st + ", " + out_bl_st + ", " + out_br_st;
+
+
+        telemetry.addData("Motors: ", motor_str);
+
+        motorFL.setPower(powerFL);
+        motorFR.setPower(powerFR);
+        motorBL.setPower(powerBL);
+        motorBR.setPower(powerBR);
     }
 
     void driveEncoderTelemetryReadout() {
@@ -155,7 +161,6 @@ class MecanumPlatform {
         telemetry.addData("FR", motorFR.getCurrentPosition());
         telemetry.addData("BL", motorBL.getCurrentPosition());
         telemetry.addData("BR", motorBR.getCurrentPosition());
-        telemetry.update();
     }
 
     boolean driveMotorsBusy() {

@@ -53,7 +53,6 @@ public class PidTurn extends LinearOpMode {
             telemetry.addData("ErrInt", errorSum/loopCount);
             telemetry.addData("ErrDif", errorDif);
             telemetry.addData("Calc", calculatedPower);
-            telemetry.addData("Pow", bot.motorFL.getPower());
             telemetry.update();
         }
     }
