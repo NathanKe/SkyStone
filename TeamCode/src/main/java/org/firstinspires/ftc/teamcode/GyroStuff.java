@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,10 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 
-//PID single motor to balance robot.  0 X-Accel, 0 Z-Accel, +Y-Accel means robot is balanced at top end of swing in XY plane
-//with Y Axis parallel to natural gravity.
-
-@Disabled
+@TeleOp(name = "Gyro")
 public class GyroStuff extends OpMode {
     private BNO055IMU imu;
     private DcMotor axis;
@@ -89,5 +85,7 @@ public class GyroStuff extends OpMode {
         telemetry.addData("YA", yAccel);
         telemetry.addData("ZA", zAccel);
         telemetry.update();
+
+        //asdf
     }
 }
