@@ -11,7 +11,7 @@ public class BasicTele extends OpMode {
     @Override
     public void init() {
         bot = new MecanumPlatform(telemetry);
-        bot.initialize(hardwareMap, false);
+        bot.initialize(hardwareMap);
     }
 
     @Override

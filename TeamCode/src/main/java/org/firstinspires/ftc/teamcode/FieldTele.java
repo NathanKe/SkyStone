@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "FieldTele")
 public class FieldTele extends OpMode {
 
-    private MecanumWithServo bot;
+    private MecanumPlatformWithGyro bot;
 
     @Override
     public void init() {
-        bot = new MecanumWithServo(telemetry);
-        bot.initialize(hardwareMap, true);
+        bot = new MecanumPlatformWithGyro(telemetry);
+        bot.initialize(hardwareMap);
     }
 
     @Override
@@ -19,8 +19,8 @@ public class FieldTele extends OpMode {
         double left_x = gamepad1.left_stick_x;
         double left_y = -1 * gamepad1.left_stick_y; // handle invert y
         double right_x = gamepad1.right_stick_x;
-        bot.mecanumPlatform.fieldDriveTrain(left_x, left_y, right_x, 1.0);
-        bot.turnServo(gamepad1.left_trigger - gamepad1.right_trigger);
+        bot.fieldDriveTrain(left_x, left_y, right_x, 1.0);
+        bot.writeGyroPositioning();
         telemetry.update();
     }
 

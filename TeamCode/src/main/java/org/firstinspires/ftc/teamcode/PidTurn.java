@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -24,8 +23,8 @@ public class PidTurn extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        MecanumPlatform bot = new MecanumPlatform(telemetry);
-        bot.initialize(hardwareMap, true);
+        MecanumPlatformWithGyro bot = new MecanumPlatformWithGyro(telemetry);
+        bot.initialize(hardwareMap);
 
         errorPrev = 0;
         errorSum = 0;
@@ -44,7 +43,7 @@ public class PidTurn extends LinearOpMode {
             errorPrev = error;
 
             calculatedPower = PID_P * error + PID_I * errorSum / loopCount + PID_D * errorDif;
-            bot.setDrivePower(calculatedPower, calculatedPower, calculatedPower, calculatedPower);
+            bot.mecanumPlatform.setDrivePower(calculatedPower, calculatedPower, calculatedPower, calculatedPower);
 
             telemetry.addData("Loop", loopCount);
             telemetry.addData("Hea", heading);
