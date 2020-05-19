@@ -100,9 +100,8 @@ class MecanumPlatform {
         telemetry.addData("BR", motorBR.getCurrentPosition());
     }
 
-    int[] getDriveCurrentPositionArray(){
-        int[] currentPositions = {motorFL.getCurrentPosition(), motorFR.getCurrentPosition(), motorBL.getCurrentPosition(), motorBR.getCurrentPosition()};
-        return currentPositions;
+    int[] getDriveCurrentPositionArray() {
+        return new int[]{motorFL.getCurrentPosition(), motorFR.getCurrentPosition(), motorBL.getCurrentPosition(), motorBR.getCurrentPosition()};
     }
 
     boolean driveMotorsBusy() {

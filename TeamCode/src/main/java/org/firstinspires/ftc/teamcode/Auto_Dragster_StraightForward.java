@@ -5,20 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Autonomous(name = "DragsterTest")
-public class DragsterTest extends LinearOpMode {
+@Autonomous(name = "DragsterStraightForward")
+public class Auto_Dragster_StraightForward extends LinearOpMode {
     private GyroDragster bot;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         bot = new GyroDragster(telemetry);
         bot.initialize(hardwareMap);
 
         waitForStart();
 
-        double init_yaw = bot.getYaw(AngleUnit.DEGREES);
+        double init_yaw = bot.gyro.getYaw(AngleUnit.DEGREES);
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             bot.yawCorrectedForwardDrive(1.0, init_yaw);
             telemetry.update();
         }

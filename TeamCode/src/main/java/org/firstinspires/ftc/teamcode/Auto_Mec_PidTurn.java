@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Autonomous(name = "PID Turn")
-public class PidTurn extends LinearOpMode {
+@Autonomous(name = "Auto_Mec_PidTurn")
+public class Auto_Mec_PidTurn extends LinearOpMode {
 
     private static final double turnAngle = -90.0;
 
@@ -22,8 +22,8 @@ public class PidTurn extends LinearOpMode {
     private int loopCount;
 
     @Override
-    public void runOpMode(){
-        MecanumPlatformWithGyro bot = new MecanumPlatformWithGyro(telemetry);
+    public void runOpMode() {
+        GyroMecanum bot = new GyroMecanum(telemetry);
         bot.initialize(hardwareMap);
 
         errorPrev = 0;
@@ -33,11 +33,11 @@ public class PidTurn extends LinearOpMode {
 
         waitForStart();
 
-        while(opModeIsActive()){
-            double heading = bot.getYaw(AngleUnit.DEGREES);
+        while (opModeIsActive()) {
+            double heading = bot.gyro.getYaw(AngleUnit.DEGREES);
             error = turnAngle - heading;
 
-            loopCount ++;
+            loopCount++;
             errorSum += error;
             errorDif = error - errorPrev;
             errorPrev = error;
@@ -49,7 +49,7 @@ public class PidTurn extends LinearOpMode {
             telemetry.addData("Hea", heading);
             telemetry.addData("Err", error);
             telemetry.addData("ErrSum", errorSum);
-            telemetry.addData("ErrInt", errorSum/loopCount);
+            telemetry.addData("ErrInt", errorSum / loopCount);
             telemetry.addData("ErrDif", errorDif);
             telemetry.addData("Calc", calculatedPower);
             telemetry.update();
